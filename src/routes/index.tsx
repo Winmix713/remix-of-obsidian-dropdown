@@ -45,6 +45,33 @@ function Index() {
   const [density, setDensity] = useState<"comfortable" | "compact">(
     "comfortable",
   );
+  const [workspace, setWorkspace] = useState("obsidian-studio");
+  const [query, setQuery] = useState("");
+
+  const workspaces = useMemo(
+    () => [
+      { id: "obsidian-studio", name: "Obsidian Studio", hint: "Personal" },
+      { id: "linear-hq", name: "Linear HQ", hint: "Team" },
+      { id: "raycast-labs", name: "Raycast Labs", hint: "Team" },
+      { id: "vercel-edge", name: "Vercel Edge", hint: "Team" },
+      { id: "figma-design", name: "Figma Design", hint: "Team" },
+      { id: "framer-motion", name: "Framer Motion", hint: "Team" },
+      { id: "notion-workspace", name: "Notion Workspace", hint: "Personal" },
+      { id: "arc-browser", name: "Arc Browser", hint: "Team" },
+      { id: "warp-terminal", name: "Warp Terminal", hint: "Personal" },
+      { id: "supabase-cloud", name: "Supabase Cloud", hint: "Team" },
+      { id: "stripe-atlas", name: "Stripe Atlas", hint: "Team" },
+      { id: "cloudflare-r2", name: "Cloudflare R2", hint: "Team" },
+    ],
+    [],
+  );
+
+  const filteredWorkspaces = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return workspaces;
+    return workspaces.filter((w) => w.name.toLowerCase().includes(q));
+  }, [query, workspaces]);
+
 
   return (
     <div className="min-h-dvh bg-[#0b0d12] text-[var(--od-text-primary)] antialiased">

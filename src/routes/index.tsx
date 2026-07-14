@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   ChevronDownIcon,
   EllipsisHorizontalIcon,
+  MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
 import {
   PencilSquareIcon,
@@ -16,6 +17,7 @@ import {
   Cog6ToothIcon,
   ArrowRightOnRectangleIcon,
   CheckIcon,
+  FaceFrownIcon,
 } from "@heroicons/react/24/outline";
 import { Dropdown } from "@/components/obsidian-dropdown";
 

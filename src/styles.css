@@ -150,16 +150,20 @@
 :root {
   --dropdown-width-min: 12.5rem;
   --dropdown-width-default: 15rem;
-  --dropdown-max-height: min(28rem, calc(100vh - 2rem));
+  --dropdown-max-height: min(22.5rem, 42vh);
 
-  --radius-overlay: 0.875rem;
-  --radius-control: 0.625rem;
+  --control-height: 2.75rem;
+  --option-height: 2.5rem;
+
+  --radius-overlay: 1rem;
+  --radius-control: 0.75rem;
   --radius-focus: 0.5rem;
 
-  --surface-floating: rgb(20 22 28 / 0.96);
+  --surface-floating: rgb(20 22 28 / 0.92);
   --surface-hover: rgb(255 255 255 / 0.075);
   --surface-active: rgb(255 255 255 / 0.11);
-  --surface-selected: rgb(220 180 92 / 0.12);
+  --surface-selected: rgb(220 180 92 / 0.14);
+  --surface-selected-strong: rgb(220 180 92 / 0.22);
 
   --border-subtle: rgb(255 255 255 / 0.09);
   --border-strong: rgb(255 255 255 / 0.16);
@@ -172,6 +176,7 @@
 
   --od-accent-primary: rgb(220 180 92);
   --od-accent-primary-soft: rgb(220 180 92 / 0.15);
+  --od-accent-primary-strong: rgb(232 200 120);
 
   --shadow-overlay:
     0 1px 2px rgb(0 0 0 / 0.2),
@@ -189,13 +194,29 @@
   --motion-enter-easing: cubic-bezier(0.16, 1, 0.3, 1);
   --motion-exit-easing: cubic-bezier(0.7, 0, 0.84, 0);
 
-  --focus-ring: 0 0 0 3px rgb(220 180 92 / 0.28);
+  --focus-ring: 0 0 0 3px rgb(220 180 92 / 0.32);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .obsidian-dropdown-content {
     transition: opacity 80ms linear !important;
     transform: none !important;
+  }
+}
+
+/* Mobile: convert the floating panel into a bottom sheet-like surface. */
+@media (max-width: 520px) {
+  .obsidian-dropdown-content {
+    position: fixed !important;
+    inset: auto 0.75rem 0.75rem 0.75rem !important;
+    top: auto !important;
+    left: 0.75rem !important;
+    right: 0.75rem !important;
+    max-width: none !important;
+    width: auto !important;
+    max-height: 70vh !important;
+    border-radius: 1.125rem !important;
+    transform-origin: bottom center !important;
   }
 }
 

@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   ChevronDownIcon,
   EllipsisHorizontalIcon,
+  MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
 import {
   PencilSquareIcon,
@@ -16,6 +17,7 @@ import {
   Cog6ToothIcon,
   ArrowRightOnRectangleIcon,
   CheckIcon,
+  FaceFrownIcon,
 } from "@heroicons/react/24/outline";
 import { Dropdown } from "@/components/obsidian-dropdown";
 
@@ -43,6 +45,33 @@ function Index() {
   const [density, setDensity] = useState<"comfortable" | "compact">(
     "comfortable",
   );
+  const [workspace, setWorkspace] = useState("obsidian-studio");
+  const [query, setQuery] = useState("");
+
+  const workspaces = useMemo(
+    () => [
+      { id: "obsidian-studio", name: "Obsidian Studio", hint: "Personal" },
+      { id: "linear-hq", name: "Linear HQ", hint: "Team" },
+      { id: "raycast-labs", name: "Raycast Labs", hint: "Team" },
+      { id: "vercel-edge", name: "Vercel Edge", hint: "Team" },
+      { id: "figma-design", name: "Figma Design", hint: "Team" },
+      { id: "framer-motion", name: "Framer Motion", hint: "Team" },
+      { id: "notion-workspace", name: "Notion Workspace", hint: "Personal" },
+      { id: "arc-browser", name: "Arc Browser", hint: "Team" },
+      { id: "warp-terminal", name: "Warp Terminal", hint: "Personal" },
+      { id: "supabase-cloud", name: "Supabase Cloud", hint: "Team" },
+      { id: "stripe-atlas", name: "Stripe Atlas", hint: "Team" },
+      { id: "cloudflare-r2", name: "Cloudflare R2", hint: "Team" },
+    ],
+    [],
+  );
+
+  const filteredWorkspaces = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return workspaces;
+    return workspaces.filter((w) => w.name.toLowerCase().includes(q));
+  }, [query, workspaces]);
+
 
   return (
     <div className="min-h-dvh bg-[#0b0d12] text-[var(--od-text-primary)] antialiased">
@@ -267,7 +296,58 @@ function Index() {
               </Dropdown.Content>
             </Dropdown>
           </Card>
+
+          {/* Card 5 — command-palette style with search + selection */}
+          <Card
+            title="Workspace switcher"
+            description="Command-palette style with live search, selected state, and empty results."
+          >
+            <Dropdown>
+              <Dropdown.Trigger>
+                <span className="text-[var(--od-text-secondary)]">Workspace</span>
+                <span className="min-w-0 truncate">
+                  {workspaces.find((w) => w.id === workspace)?.name ?? "—"}
+                </span>
+                <Dropdown.Chevron />
+              </Dropdown.Trigger>
+              <Dropdown.Content>
+                <Dropdown.Search
+                  icon={<MagnifyingGlassIcon className="size-4" />}
+                  hint="⌘K"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search workspaces…"
+                />
+                {filteredWorkspaces.length === 0 ? (
+                  <Dropdown.Empty icon={<FaceFrownIcon className="size-5" />}>
+                    No workspaces match "{query}"
+                  </Dropdown.Empty>
+                ) : (
+                  filteredWorkspaces.map((w) => (
+                    <Dropdown.Item
+                      key={w.id}
+                      selected={workspace === w.id}
+                      onClick={() => {
+                        setWorkspace(w.id);
+                        setQuery("");
+                      }}
+                    >
+                      <Dropdown.Label>
+                        <span className="flex flex-col">
+                          <span>{w.name}</span>
+                          <span className="text-[11.5px] font-normal text-[var(--od-text-tertiary)]">
+                            {w.hint}
+                          </span>
+                        </span>
+                      </Dropdown.Label>
+                    </Dropdown.Item>
+                  ))
+                )}
+              </Dropdown.Content>
+            </Dropdown>
+          </Card>
         </section>
+
 
         <footer className="mt-auto flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-[var(--border-subtle)] pt-8 text-[12px] text-[var(--od-text-tertiary)]">
           <span>Try it: <kbd className="rounded border border-[var(--border-subtle)] px-1.5 py-0.5 text-[11px]">Tab</kbd> to trigger, <kbd className="rounded border border-[var(--border-subtle)] px-1.5 py-0.5 text-[11px]">Enter</kbd> to open, <kbd className="rounded border border-[var(--border-subtle)] px-1.5 py-0.5 text-[11px]">↑</kbd> <kbd className="rounded border border-[var(--border-subtle)] px-1.5 py-0.5 text-[11px]">↓</kbd> to navigate, <kbd className="rounded border border-[var(--border-subtle)] px-1.5 py-0.5 text-[11px]">Esc</kbd> to close.</span>

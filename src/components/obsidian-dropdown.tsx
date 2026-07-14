@@ -242,19 +242,41 @@ function Item({
 /*  Icon slot                                                                 */
 /* -------------------------------------------------------------------------- */
 
-function Icon({ children }: { children: ReactNode }) {
+function Icon({
+  children,
+  tone = "accent",
+}: {
+  children: ReactNode;
+  /** `accent` = red Raycast tile, `muted` = neutral tile, `bare` = no tile bg */
+  tone?: "accent" | "muted" | "bare";
+}) {
   const variant = useContext(ItemVariantCtx);
+  const useTile = tone !== "bare";
   return (
     <span
       aria-hidden="true"
       className={clsx(
-        "flex size-4 shrink-0 items-center justify-center",
-        variant === "danger"
-          ? "text-[var(--od-text-danger)]"
-          : "text-[var(--od-text-secondary)] group-data-[focus]:text-[var(--od-text-primary)]",
+        "relative flex shrink-0 items-center justify-center transition-transform duration-150",
+        useTile
+          ? "size-7 rounded-[8px] text-white group-data-[focus]:scale-[1.04] group-active:scale-[0.96]"
+          : "size-4",
+        variant === "danger" && !useTile && "text-[var(--od-text-danger)]",
+        !useTile && variant !== "danger" &&
+          "text-[var(--od-text-secondary)] group-data-[focus]:text-[var(--od-text-primary)]",
       )}
+      style={
+        useTile
+          ? {
+              backgroundImage:
+                tone === "accent" ? "var(--tile-bg)" : "var(--tile-bg-muted)",
+              boxShadow: "var(--tile-ring), var(--tile-shadow)",
+            }
+          : undefined
+      }
     >
-      {children}
+      <span className={clsx("relative flex items-center justify-center", useTile ? "size-4" : "size-4")}>
+        {children}
+      </span>
     </span>
   );
 }
